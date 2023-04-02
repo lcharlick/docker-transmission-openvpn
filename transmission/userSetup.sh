@@ -54,7 +54,7 @@ if [ -n "$PUID" ] && [ ! "$(id -u root)" -eq "$PUID" ]; then
             "${TRANSMISSION_WATCH_DIR}"
 
         echo "Setting permissions for download and incomplete directories"
-        TRANSMISSION_UMASK_OCTAL=$(printf '%03g' $(printf '%o\n' $(jq .umask ${TRANSMISSION_HOME}/settings.json)))
+        TRANSMISSION_UMASK_OCTAL=$(jq .umask ${TRANSMISSION_HOME}/settings.json)
         DIR_PERMS=$(printf '%o\n' $((0777 & ~TRANSMISSION_UMASK_OCTAL)))
         FILE_PERMS=$(printf '%o\n' $((0666 & ~TRANSMISSION_UMASK_OCTAL)))
         echo "Mask: ${TRANSMISSION_UMASK_OCTAL}"
