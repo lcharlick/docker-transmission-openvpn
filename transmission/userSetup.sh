@@ -52,23 +52,6 @@ if [ -n "$PUID" ] && [ ! "$(id -u root)" -eq "$PUID" ]; then
             "${TRANSMISSION_DOWNLOAD_DIR}" \
             "${TRANSMISSION_INCOMPLETE_DIR}" \
             "${TRANSMISSION_WATCH_DIR}"
-
-        echo "Setting permissions for download and incomplete directories"
-        TRANSMISSION_UMASK_OCTAL=$(jq .umask ${TRANSMISSION_HOME}/settings.json)
-        DIR_PERMS=$(printf '%o\n' $((0777 & ~TRANSMISSION_UMASK_OCTAL)))
-        FILE_PERMS=$(printf '%o\n' $((0666 & ~TRANSMISSION_UMASK_OCTAL)))
-        echo "Mask: ${TRANSMISSION_UMASK_OCTAL}"
-        echo "Directories: ${DIR_PERMS}"
-        echo "Files: ${FILE_PERMS}"
-
-        find "${TRANSMISSION_DOWNLOAD_DIR}" "${TRANSMISSION_INCOMPLETE_DIR}" -type d \
-        -exec chmod $(printf '%o\n' $((0777 & ~TRANSMISSION_UMASK_OCTAL))) {} +
-        find "${TRANSMISSION_DOWNLOAD_DIR}" "${TRANSMISSION_INCOMPLETE_DIR}" -type  f \
-        -exec chmod $(printf '%o\n' $((0666 & ~TRANSMISSION_UMASK_OCTAL))) {} +
-
-        echo "Setting permission for watch directory (775) and its files (664)"
-        chmod -R o=rX,ug=rwX \
-            "${TRANSMISSION_WATCH_DIR}"
     fi
 fi
 
